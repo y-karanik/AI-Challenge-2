@@ -34,23 +34,161 @@ const AVATAR_VARIANTS = {
     "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><defs><linearGradient id='bg' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#eef3fb'/><stop offset='100%' stop-color='#d9e2f1'/></linearGradient></defs><rect width='96' height='96' rx='48' fill='url(%23bg)'/><path d='M48 22c10.8 0 17.5 8 17.5 18.5 0 10.6-7.6 18.4-17.5 18.4s-17.5-7.8-17.5-18.4C30.5 30 37.2 22 48 22Z' fill='#c6d2e5'/><path d='M22 83c2.3-13.7 12.7-21.7 26-21.7S71.7 69.3 74 83' fill='#b6c5dd'/><path d='M32.8 39.4c.7-12 7.9-19.4 18.8-19.4 8.4 0 13.8 4.3 15.6 11.4-4.4-.6-8.1.1-11.1 2.1-3.4 2.3-6.3 3.6-11.8 3.6-4.2 0-8.1.8-11.5 2.3Z' fill='#d9e2f1' opacity='.95'/></svg>"
 };
 
-const ACTIVITY_TEMPLATES = {
-  "Public Speaking": [
-    "[LAB] Tech talk on API design with {peer}",
-    "[COMM] Demo session for cross-team review with {peer}",
-    "[LAB] Lightning talk on delivery metrics with {peer}"
-  ],
-  Education: [
-    "[LAB] Mentoring session with {peer}",
-    "[LAB] Lecture on engineering fundamentals with {peer}",
-    "[LAB] Workshop on test strategy with {peer}"
-  ],
-  "University Partnership": [
-    "[UNI] Guest lecture with {peer}",
-    "[UNI] Campus workshop with {peer}",
-    "[UNI] Student project review with {peer}"
-  ]
+const ROLE_ACTIVITY_TEMPLATES = {
+  frontend: {
+    "Public Speaking": [
+      "[LAB] Lecture \"JS Workshop #1: JS variables\"",
+      "[LAB] Lecture \"JS Workshop #4: Promises\"",
+      "[EDU] Frontend Digest #5",
+      "[REG] React architecture review with {peer}",
+      "[EDU] Tech talk on Web Performance with {peer}"
+    ],
+    Education: [
+      "[LAB] Lecture \"JS Workshop #2: Arrays\"",
+      "[LAB] Lecture \"TypeScript Basics #3\"",
+      "[EDU] CSS Layout Patterns",
+      "[LAB] Mentoring of {peer}",
+      "[EDU] Workshop on component testing with {peer}"
+    ],
+    "University Partnership": [
+      "[UNI] Academic internship mentoring",
+      "[UNI] Frontend bootcamp with {peer}",
+      "[UNI] Campus workshop on React",
+      "[REG] Student project review with {peer}",
+      "[UNI] University webinar on UI accessibility"
+    ]
+  },
+  senior: {
+    "Public Speaking": [
+      "[EDU] PHP Digest #12",
+      "[LAB] Lecture \"C# Collections and Data Structures\"",
+      "[REG] System design session with {peer}",
+      "[EDU] Architecture digest on .NET",
+      "[REG] Backend incident review with {peer}"
+    ],
+    Education: [
+      "[EDU] PHP WPML",
+      "[EDU] PHP News Digest",
+      "[LAB] Lecture \"C# Async Patterns\"",
+      "[LAB] Mentoring of {peer}",
+      "[EDU] Workshop on API versioning"
+    ],
+    "University Partnership": [
+      "[UNI] Academic internship mentoring",
+      "[UNI] Guest lecture on backend scaling",
+      "[UNI] Campus workshop on C# fundamentals",
+      "[REG] Mentoring of {peer}",
+      "[REG] Student project review with {peer}"
+    ]
+  },
+  software: {
+    "Public Speaking": [
+      "[EDU] Engineering Digest #9",
+      "[REG] API quality review with {peer}",
+      "[LAB] Lecture \"Clean Code in Practice\"",
+      "[EDU] Tech talk on REST best practices",
+      "[REG] Cross-team demo with {peer}"
+    ],
+    Education: [
+      "[LAB] Mentoring of {peer}",
+      "[EDU] Workshop on service reliability",
+      "[LAB] Lecture \"Database indexing #2\"",
+      "[EDU] Error handling patterns",
+      "[LAB] Lecture \"Unit testing essentials\""
+    ],
+    "University Partnership": [
+      "[UNI] Guest lecture with {peer}",
+      "[UNI] Campus workshop on APIs",
+      "[UNI] Academic internship mentoring",
+      "[REG] Student project review with {peer}",
+      "[REG] Mentoring of {peer}"
+    ]
+  },
+  qa: {
+    "Public Speaking": [
+      "[EDU] QA Digest #4",
+      "[LAB] Lecture \"Testing Pyramid in Practice\"",
+      "[REG] Bug triage review with {peer}",
+      "[EDU] Talk on regression strategy",
+      "[REG] Release retrospective with {peer}"
+    ],
+    Education: [
+      "[LAB] Mentoring of {peer}",
+      "[EDU] Workshop on test automation",
+      "[LAB] Lecture \"Playwright Essentials\"",
+      "[EDU] Defect analysis digest",
+      "[LAB] Lecture \"API testing patterns\""
+    ],
+    "University Partnership": [
+      "[UNI] QA internship mentoring",
+      "[UNI] Guest lecture on quality engineering",
+      "[REG] Student project review with {peer}",
+      "[REG] Mentoring of {peer}",
+      "[UNI] Campus workshop on test design"
+    ]
+  },
+  data: {
+    "Public Speaking": [
+      "[EDU] Data Digest #7",
+      "[LAB] Lecture \"SQL Workshop #3: Window Functions\"",
+      "[REG] Analytics review with {peer}",
+      "[EDU] Talk on KPI design",
+      "[REG] Dashboard demo with {peer}"
+    ],
+    Education: [
+      "[LAB] Mentoring of {peer}",
+      "[EDU] Workshop on data quality checks",
+      "[LAB] Lecture \"Python for Analysis #2\"",
+      "[EDU] Metrics governance digest",
+      "[LAB] Lecture \"A/B testing basics\""
+    ],
+    "University Partnership": [
+      "[UNI] Data internship mentoring",
+      "[UNI] Guest lecture on analytics foundations",
+      "[REG] Student project review with {peer}",
+      "[REG] Mentoring of {peer}",
+      "[UNI] Campus workshop on SQL"
+    ]
+  },
+  product: {
+    "Public Speaking": [
+      "[EDU] Product Digest #6",
+      "[LAB] Lecture \"Roadmap Prioritization\"",
+      "[REG] Stakeholder sync with {peer}",
+      "[EDU] Talk on discovery practices",
+      "[REG] Product demo with {peer}"
+    ],
+    Education: [
+      "[LAB] Mentoring of {peer}",
+      "[EDU] Workshop on backlog refinement",
+      "[LAB] Lecture \"Writing Better User Stories\"",
+      "[EDU] Product metrics digest",
+      "[LAB] Lecture \"Discovery interviews\""
+    ],
+    "University Partnership": [
+      "[UNI] Product internship mentoring",
+      "[UNI] Guest lecture on product strategy",
+      "[REG] Student project review with {peer}",
+      "[REG] Mentoring of {peer}",
+      "[UNI] Campus workshop on MVP scoping"
+    ]
+  }
 };
+
+function roleFamily(role) {
+  if (role.startsWith("Frontend Engineer")) return "frontend";
+  if (role.startsWith("Senior Software Engineer")) return "senior";
+  if (role.startsWith("Software Engineer")) return "software";
+  if (role.startsWith("QA Engineer")) return "qa";
+  if (role.startsWith("Data Analyst")) return "data";
+  if (role.startsWith("Product Manager")) return "product";
+  return "software";
+}
+
+function templatesForRole(role, category) {
+  const family = roleFamily(role);
+  return ROLE_ACTIVITY_TEMPLATES[family][category];
+}
 
 function pad2(value) {
   return String(value).padStart(2, "0");
@@ -101,7 +239,9 @@ function hash(a, b) {
 }
 
 function buildActivities(roster, ownerIndex) {
+  const owner = roster[ownerIndex];
   const count = 3 + (hash(ownerIndex, 0) % 13);
+  const usedTitles = new Set();
   const activities = [];
 
   for (let i = 0; i < count; i += 1) {
@@ -111,8 +251,31 @@ function buildActivities(roster, ownerIndex) {
     const peerIndexRaw = hash(ownerIndex, i * 11 + 5) % roster.length;
     const peerIndex = peerIndexRaw === ownerIndex ? (peerIndexRaw + 1) % roster.length : peerIndexRaw;
     const peer = roster[peerIndex];
-    const template = ACTIVITY_TEMPLATES[category][hash(ownerIndex, i * 13 + 7) % ACTIVITY_TEMPLATES[category].length];
-    const title = template.replace("{peer}", peer.name);
+    const templates = templatesForRole(owner.role, category);
+
+    let title = "";
+    let usesPeer = false;
+
+    for (let attempt = 0; attempt < templates.length; attempt += 1) {
+      const candidateTemplate = templates[(hash(ownerIndex, i * 13 + 7) + attempt) % templates.length];
+      const candidateUsesPeer = candidateTemplate.includes("{peer}");
+      const candidateTitle = candidateUsesPeer ? candidateTemplate.replace("{peer}", peer.name) : candidateTemplate;
+
+      if (!usedTitles.has(candidateTitle)) {
+        title = candidateTitle;
+        usesPeer = candidateUsesPeer;
+        break;
+      }
+    }
+
+    if (!title) {
+      const fallbackTemplate = templates[hash(ownerIndex, i * 13 + 7) % templates.length];
+      usesPeer = fallbackTemplate.includes("{peer}");
+      const baseTitle = usesPeer ? fallbackTemplate.replace("{peer}", peer.name) : fallbackTemplate;
+      title = `${baseTitle} #${i + 1}`;
+    }
+
+    usedTitles.add(title);
 
     activities.push({
       title,
@@ -121,7 +284,7 @@ function buildActivities(roster, ownerIndex) {
       points: POINT_VALUES[hash(ownerIndex * 3, i * 19 + 11) % POINT_VALUES.length],
       year,
       quarter,
-      relatedParticipantId: peer.id
+      relatedParticipantId: usesPeer ? peer.id : null
     });
   }
 
@@ -286,7 +449,7 @@ function renderPodium(list) {
       const safeRole = escapeHtml(item.role);
       return `
       <article class="podium-card">
-        <div class="avatar" style="background:${item.color}">
+        <div class="avatar rank-${rank}" style="background:${item.color}">
           ${item.avatarSvg}
           <span class="badge-rank rank-${rank}">${rank}</span>
         </div>
