@@ -1,0 +1,1 @@
+UPDATE public.events SET title='TEST_PUB' WHERE id='eeee1111-0000-0000-0000-000000000002';
