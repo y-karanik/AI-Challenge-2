@@ -1,5 +1,5 @@
 {
-  "name": "My workflow",
+  "name": "Final workflow",
   "nodes": [
     {
       "parameters": {
@@ -12,10 +12,10 @@
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        1568,
-        288
+        -1680,
+        -224
       ],
-      "id": "5231eae7-5410-4c60-b679-781e84d70ccb",
+      "id": "1a77de9f-9dca-4018-9e77-ee8debdfcc00",
       "name": "Telegram Trigger",
       "webhookId": "1a104278-7cd3-483d-a90e-4b0c827a200a",
       "credentials": {
@@ -134,10 +134,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        1776,
-        288
+        -1472,
+        -224
       ],
-      "id": "0b89a1d9-bf7e-4766-97c4-26de3cca6491",
+      "id": "8a706536-602e-465a-bac5-4c95d493bf97",
       "name": "Switch"
     },
     {
@@ -147,10 +147,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2032,
-        288
+        -1216,
+        -224
       ],
-      "id": "dbb0645f-1ab8-4e49-98b5-b4a0915c1942",
+      "id": "030ca253-70d7-48f1-b1c8-cadcbea47e02",
       "name": "Extract URL"
     },
     {
@@ -160,10 +160,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2656,
-        288
+        -384,
+        -224
       ],
-      "id": "59dd3f68-c652-4144-9716-592100938a82",
+      "id": "e24b3974-ab8c-47d2-ab06-d64aa1bbfb3b",
       "name": "Parse AI Response"
     },
     {
@@ -209,10 +209,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        2864,
-        288
+        -176,
+        -224
       ],
-      "id": "c9ed87be-856d-40d0-90cc-1a825c264fa1",
+      "id": "c52ad1bf-cb3b-4448-b06f-617e20201613",
       "name": "Save Material",
       "credentials": {
         "supabaseApi": {
@@ -223,15 +223,15 @@
     },
     {
       "parameters": {
-        "jsCode": "const materials = $input.all().map(item => item.json);\nconst chatId = $('Telegram Trigger').first().json.message.chat.id;\n\nif (materials.length === 0) {\n  return [{\n    json: {\n      chat_id: chatId,\n      text: '📚 You have no saved materials yet.\\n\\nSend /learn <url> to add one.',\n      reply_markup: null,\n    },\n  }];\n}\n\nconst buttons = materials.map(m => [\n  { text: m.title, callback_data: `pick:${m.id}` },\n]);\n\nreturn [{\n  json: {\n    chat_id: chatId,\n    text: '📚 Choose a topic for the quiz:',\n    reply_markup: { inline_keyboard: buttons },\n  },\n}];"
+        "jsCode": "const materials = $('Get Materials').all().map(item => item.json);\nconst history = $('Get History').all().map(item => item.json);\nconst chatId = $('Telegram Trigger').first().json.message.chat.id;\n\nif (materials.length === 0) {\n  return [{\n    json: {\n      chat_id: chatId,\n      text: '📚 You have no saved materials yet.\\n\\nSend /learn <url> to add one.',\n      reply_markup: null,\n    },\n  }];\n}\n\nconst lastScoreByMaterial = {};\nfor (const h of history) {\n  const prev = lastScoreByMaterial[h.material_id];\n  if (!prev || new Date(h.completed_at) > new Date(prev.completed_at)) {\n    lastScoreByMaterial[h.material_id] = h;\n  }\n}\n\nconst buttons = materials.map(m => {\n  const last = lastScoreByMaterial[m.id];\n  const label = last\n    ? `${m.title} (last: ${last.score}/${last.total})`\n    : m.title;\n  return [{ text: label, callback_data: `pick:${m.id}` }];\n});\n\nreturn [{\n  json: {\n    chat_id: chatId,\n    text: '📚 Choose a topic for the quiz:',\n    reply_markup: { inline_keyboard: buttons },\n  },\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2240,
-        432
+        -800,
+        -80
       ],
-      "id": "0be8bc94-0ca2-44d1-84e9-5eb446fbc016",
+      "id": "0b49de2a-fd1d-4b23-af0b-ccef574ef1c3",
       "name": "Build Topic List"
     },
     {
@@ -241,10 +241,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2000,
-        672
+        -1248,
+        176
       ],
-      "id": "54759bc6-8d19-4959-9313-1809186af9a7",
+      "id": "6b0b6ae3-9afc-4953-a498-375f5971bde8",
       "name": "Parse Callback"
     },
     {
@@ -307,10 +307,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        2224,
-        672
+        -1024,
+        176
       ],
-      "id": "735e8265-aefc-4165-8326-9e45079f18f1",
+      "id": "927b8d9a-4675-4058-b013-f634ce8453c0",
       "name": "Callback Router"
     },
     {
@@ -329,10 +329,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        2480,
-        608
+        -560,
+        112
       ],
-      "id": "1a1b916b-74d7-4224-886d-332d3f1dddb1",
+      "id": "6527484b-7c44-4ae6-8ff6-827ef641ed54",
       "name": "Get Material",
       "credentials": {
         "supabaseApi": {
@@ -366,10 +366,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        2688,
-        608
+        -352,
+        112
       ],
-      "id": "c85f765f-4880-4664-a19b-82e0df8cec94",
+      "id": "8ef3f9c9-a306-42f7-8f94-916acecc44e9",
       "name": "Examiner AI"
     },
     {
@@ -379,10 +379,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2896,
-        608
+        -144,
+        112
       ],
-      "id": "67a50ab7-d1ed-402a-a04e-6cf3b1c17713",
+      "id": "312c4944-c7ad-4d9d-abca-200b0cb660c2",
       "name": " Parse Questions"
     },
     {
@@ -420,10 +420,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        3104,
-        608
+        64,
+        112
       ],
-      "id": "a281a9d1-c43c-4865-be7f-aa6b98643274",
+      "id": "00f8a57b-c3bc-4e22-b2ed-6ef951c0877b",
       "name": "Save Questions",
       "credentials": {
         "supabaseApi": {
@@ -448,10 +448,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        2416,
-        912
+        -832,
+        416
       ],
-      "id": "04a2b001-8b7c-463d-882c-ff0790e93dd1",
+      "id": "7365f5c4-3547-47b2-a5d7-b1154ce1163e",
       "name": "Get Question",
       "credentials": {
         "supabaseApi": {
@@ -476,10 +476,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        2608,
-        912
+        -640,
+        416
       ],
-      "id": "69f47dca-5c8a-45c3-9252-ca64aaf27506",
+      "id": "cae6e006-9e4f-4132-b113-cb71a6256d49",
       "name": "Get User State",
       "credentials": {
         "supabaseApi": {
@@ -505,10 +505,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        3312,
-        608
+        272,
+        112
       ],
-      "id": "bbc7d11c-515c-469d-95bf-b5920736a30d",
+      "id": "836d2fed-43ed-416a-a647-5f084db82a4d",
       "name": "Reset State",
       "alwaysOutputData": true,
       "retryOnFail": true,
@@ -546,10 +546,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        3520,
-        608
+        480,
+        112
       ],
-      "id": "c06d146e-5295-4b19-abf3-a9d3e8b0e03e",
+      "id": "387dc561-9749-409e-8989-15c3b7667859",
       "name": "Init State",
       "credentials": {
         "supabaseApi": {
@@ -565,10 +565,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2816,
-        912
+        -432,
+        416
       ],
-      "id": "f3bf39cb-bee6-4d13-9d19-8dbe9962b283",
+      "id": "210dd43c-22e6-4dc5-80ab-e982d8717e12",
       "name": "Check Answer"
     },
     {
@@ -604,10 +604,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        3232,
-        912
+        -16,
+        416
       ],
-      "id": "d266643c-9ace-480f-b74a-50c2ca96ce34",
+      "id": "ea3301a4-6925-467c-9ff4-97fbd048f4e3",
       "name": "Update State",
       "credentials": {
         "supabaseApi": {
@@ -677,10 +677,10 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.4,
       "position": [
-        3440,
-        912
+        192,
+        416
       ],
-      "id": "024e3e91-c54e-4817-8773-028893e60c19",
+      "id": "708b0ebc-0280-45d0-90ab-17b944afb87c",
       "name": "Quiz Continue Router"
     },
     {
@@ -703,10 +703,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        3712,
-        800
+        464,
+        304
       ],
-      "id": "f1b0f59d-8064-42df-956a-0d8a529cfdb5",
+      "id": "d90e7e10-868b-4b18-b598-b45869a85058",
       "name": " Get Next Question",
       "credentials": {
         "supabaseApi": {
@@ -722,10 +722,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3936,
-        800
+        688,
+        304
       ],
-      "id": "50b3d7d5-37c2-480b-b48b-6eb2ad1494e4",
+      "id": "ea195e31-6690-4490-9c2c-9103bcbdf7fa",
       "name": "Build Next Question"
     },
     {
@@ -740,23 +740,23 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        3024,
-        912
+        -224,
+        416
       ],
-      "id": "00cf949a-1f01-4899-80fa-882767be4e6f",
+      "id": "73849536-eb43-41bd-8a8d-d180f7eca549",
       "name": "Send Feedback"
     },
     {
       "parameters": {
-        "jsCode": "const check = $('Check Answer').first().json;\nconst score = check.new_correct_count;\nconst total = check.total_questions;\nconst percent = Math.round((score / total) * 100);\nconst answers = check.answers || [];\n\nlet emoji = '🎉';\nif (percent < 50) {\n  emoji = '📚';\n} else if (percent < 80) {\n  emoji = '👍';\n}\n\nconst breakdown = answers\n  .map((a, i) => {\n    const mark = a.is_correct ? '✅' : '❌';\n    let line = `${mark} Q${i + 1}: ${a.question}\\nYour answer: ${a.user_answer}) ${a.options[a.user_answer]}`;\n    if (!a.is_correct) {\n      line += `\\nCorrect: ${a.correct_answer}) ${a.options[a.correct_answer]}\\n💬 ${a.explanation}`;\n    }\n    return line;\n  })\n  .join('\\n\\n');\n\nconst text = `${emoji} Quiz completed!\\n\\nYour score: ${score} / ${total} (${percent}%)\\n\\n— Breakdown —\\n\\n${breakdown}\\n\\nSend /quiz to try another topic or /learn <url> to add new material.`;\n\nreturn [{\n  json: {\n    chat_id: check.chat_id,\n    text: text,\n  },\n}];"
+        "jsCode": "const check = $('Check Answer').first().json;\nconst score = check.new_correct_count;\nconst total = check.total_questions;\nconst percent = Math.round((score / total) * 100);\nconst answers = check.answers || [];\n\nlet emoji = '🎉';\nif (percent < 50) {\n  emoji = '📚';\n} else if (percent < 80) {\n  emoji = '👍';\n}\n\nconst breakdown = answers\n  .map((a, i) => {\n    const mark = a.is_correct ? '✅' : '❌';\n    let line = `${mark} Q${i + 1}: ${a.question}\\nYour answer: ${a.user_answer}) ${a.options[a.user_answer]}`;\n    if (!a.is_correct) {\n      line += `\\nCorrect: ${a.correct_answer}) ${a.options[a.correct_answer]}\\n💬 ${a.explanation}`;\n    }\n    return line;\n  })\n  .join('\\n\\n');\n\nconst text = `${emoji} Quiz completed!\\n\\nYour score: ${score} / ${total} (${percent}%)\\n\\n— Breakdown —\\n\\n${breakdown}\\n\\nSend /quiz to try another topic or /learn <url> to add new material.`;\n\nreturn [{\n  json: {\n    chat_id: check.chat_id,\n    material_id: check.material_id,\n    score: score,\n    total: total,\n    text: text,\n  },\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3648,
-        1008
+        400,
+        512
       ],
-      "id": "8d408a32-1755-4037-97de-43065911c15e",
+      "id": "c0fac472-3a63-4899-bbad-6872a6a206d0",
       "name": "Build Final"
     },
     {
@@ -782,10 +782,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        2240,
-        288
+        -800,
+        -224
       ],
-      "id": "30bf16e5-66a8-4872-8286-cc4a94533a3c",
+      "id": "61f7983c-902e-417f-8ab6-f95b2cbce125",
       "name": "Fetch Content"
     },
     {
@@ -813,10 +813,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        2448,
-        288
+        -592,
+        -224
       ],
-      "id": "268500a2-bb79-47a7-a704-7b8a00c4f5c0",
+      "id": "20d591e4-eaf1-438f-ae06-27a2ed0f46fc",
       "name": "Teacher AI"
     },
     {
@@ -828,10 +828,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        1984,
-        128
+        -1264,
+        -384
       ],
-      "id": "cce839fd-cadb-40b8-b509-7476941e25f5",
+      "id": "4397a13f-4af7-4bc7-9133-9e8591e20d51",
       "name": "Send Welcome (/start)",
       "webhookId": "084c7ce9-a5a3-4981-8c5e-bd90c104289b",
       "credentials": {
@@ -853,10 +853,10 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        3072,
-        288
+        32,
+        -224
       ],
-      "id": "a2bcc2be-f453-4c12-9fab-25ead2c49276",
+      "id": "a7ae0202-aaf6-4338-b0c6-7585633f128f",
       "name": "Send Summary (/learn)",
       "webhookId": "f27d350f-f04d-4a4e-940b-5f417a675217",
       "credentials": {
@@ -884,10 +884,10 @@
       "type": "n8n-nodes-base.supabase",
       "typeVersion": 1,
       "position": [
-        2032,
-        432
+        -1216,
+        -80
       ],
-      "id": "26a58bef-2f6d-42f9-98e2-d2e12b40ac1f",
+      "id": "9a215b27-fa8b-40fc-8b66-fc6f1029da0b",
       "name": "Get Materials",
       "credentials": {
         "supabaseApi": {
@@ -908,10 +908,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        2448,
-        432
+        -592,
+        -80
       ],
-      "id": "bf57997a-93fb-4182-9d80-a1d56144d842",
+      "id": "6eb930e0-3225-47e3-bd91-589723b1d5b8",
       "name": "Send Topic List (/quiz)"
     },
     {
@@ -921,10 +921,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3728,
-        608
+        688,
+        112
       ],
-      "id": "4d8c24ac-88f5-4869-b892-9c609bcc579c",
+      "id": "3f83e299-69f1-4ea7-a689-06e7669a45f9",
       "name": "Build Question 1"
     },
     {
@@ -939,10 +939,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        3936,
-        608
+        896,
+        112
       ],
-      "id": "76bed27b-6847-404d-84b0-527d0f3e1cfe",
+      "id": "f817973d-8298-4b61-b4a4-3048f46dc36b",
       "name": "Send Question (pick)"
     },
     {
@@ -957,10 +957,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        4144,
-        800
+        896,
+        304
       ],
-      "id": "42f117f1-e883-4a0d-8e38-135945449d90",
+      "id": "4b81cc15-19e2-4869-afc7-d84d3bdcbf9a",
       "name": "Send Next Question (next)"
     },
     {
@@ -969,17 +969,87 @@
         "url": "https://api.telegram.org/botYOUR_TELEGRAM_BOT_TOKEN/sendMessage",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"chat_id\": {{ $json.chat_id }},\n  \"text\": {{ JSON.stringify($json.text) }}\n}",
+        "jsonBody": "={\n  \"chat_id\": {{ $('Build Final').first().json.chat_id }},\n  \"text\": {{ JSON.stringify($('Build Final').first().json.text) }}\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        3856,
-        1008
+        816,
+        512
       ],
-      "id": "bb74415f-cf47-4f9f-a5dc-c60e4549d950",
+      "id": "c8166d22-b592-4bdf-aefb-90f30d91e54c",
       "name": "Send Final (final)"
+    },
+    {
+      "parameters": {
+        "tableId": "quiz_history",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $json.chat_id }}"
+            },
+            {
+              "fieldId": "material_id",
+              "fieldValue": "={{ $json.material_id }}"
+            },
+            {
+              "fieldId": "score",
+              "fieldValue": "={{ $json.score }}"
+            },
+            {
+              "fieldId": "total",
+              "fieldValue": "={{ $json.total }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        608,
+        512
+      ],
+      "id": "3e9e6b94-813e-40bf-9f87-082693f21f23",
+      "name": "Save History",
+      "credentials": {
+        "supabaseApi": {
+          "id": "OhU2rjiC5erlRJbk",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "quiz_history",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "chat_id",
+              "condition": "eq",
+              "keyValue": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -1008,
+        -80
+      ],
+      "id": "b0049022-c0ba-42d7-acf3-c921f71c7504",
+      "name": "Get History",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "OhU2rjiC5erlRJbk",
+          "name": "Supabase account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -1265,7 +1335,7 @@
       "main": [
         [
           {
-            "node": "Send Final (final)",
+            "node": "Save History",
             "type": "main",
             "index": 0
           }
@@ -1298,7 +1368,7 @@
       "main": [
         [
           {
-            "node": "Build Topic List",
+            "node": "Get History",
             "type": "main",
             "index": 0
           }
@@ -1315,14 +1385,36 @@
           }
         ]
       ]
+    },
+    "Save History": {
+      "main": [
+        [
+          {
+            "node": "Send Final (final)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get History": {
+      "main": [
+        [
+          {
+            "node": "Build Topic List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "0f67020e-f474-4495-b58b-3d5c13a9afb1",
+  "versionId": "6240024e-243c-46e7-9149-24413344320b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "8a1b12e95f36b79697e06a7170268b759a6595e1d13791c5925793c5df10b128"

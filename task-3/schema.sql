@@ -28,3 +28,12 @@ create table user_state (
   correct_count int default 0,
   answers jsonb default '[]'::jsonb
 );
+
+create table quiz_history (
+  id bigserial primary key,
+  chat_id bigint not null,
+  material_id bigint references materials(id) on delete cascade,
+  score int not null,
+  total int not null,
+  completed_at timestamptz default now()
+);

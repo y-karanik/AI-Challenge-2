@@ -13,6 +13,7 @@
 - Splitting the work into two distinct AI agents (Teacher / Examiner) with strict JSON prompts. Both consistently returned valid JSON during development.
 - Passing the full article content (truncated to ~8k chars) into the Teacher and only the title+summary+first chunk into the Examiner. Examiner questions stayed specific to the material, with no leakage across topics.
 - Using `Prefer: resolution=merge-duplicates` style "upsert" via direct HTTP to the Supabase REST API for user_state turned out to be flaky. Replaced it with the cleaner pattern: `Delete by chat_id` then `Create` via the native Supabase node. Always-fresh state on a new quiz.
+- Each completed quiz writes `(chat_id, material_id, score, total)` into a `quiz_history` table. On `/quiz`, the topic list pulls the latest attempt per material and shows it inline on the button (e.g., `HTTP Overview (last: 4/5)`). This gives the user a visible sense of progress across sessions without having to add an explicit "progress" command.
 - Storing every answer (with the user's pick, the correct one, and the explanation) in `user_state.answers` as a JSON array allowed the final summary to include a per-question breakdown without a separate `attempts` table.
 
 ## What didn't work
