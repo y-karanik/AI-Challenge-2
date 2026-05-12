@@ -6,7 +6,7 @@ Repository for AI Challenge 2.0 (Group 1)
 
 - task-1 — The Clone Wars
 - task-2 — You Shall Not Pass
-- task-3 —
+- task-3 — Here There Be Dragons
 - task-4 —
 
 ## Author
